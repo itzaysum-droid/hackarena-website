@@ -4,143 +4,576 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HackArena | Ignite Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --bg-dark: #0d1020;
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.14);
+      --text: #ffffff;
+      --muted: #d9def7;
+      --yellow: #ffd60a;
+      --orange: #ff7b00;
+      --cyan: #00d4ff;
+      --pink: #ff4fd8;
+      --purple: #7b2cff;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #ffb703, #fb8500, #219ebc, #8338ec);
-      color: white;
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 214, 10, 0.22), transparent 22%),
+        radial-gradient(circle at 85% 15%, rgba(0, 212, 255, 0.22), transparent 24%),
+        radial-gradient(circle at 80% 80%, rgba(255, 79, 216, 0.16), transparent 22%),
+        linear-gradient(135deg, #0b1022, #171c39 40%, #26124a 100%);
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,0.03) 0px,
+          rgba(255,255,255,0.03) 2px,
+          transparent 2px,
+          transparent 90px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: min(1120px, 92%);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      background: rgba(9, 12, 25, 0.55);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-inner {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 18px 40px;
-      background: rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(8px);
+      padding: 18px 0;
     }
 
     .logo {
-      font-size: 24px;
-      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo span {
+      color: var(--yellow);
+      text-shadow: 0 0 18px rgba(255, 214, 10, 0.5);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      align-items: center;
     }
 
     .nav-links a {
-      color: white;
+      color: var(--text);
       text-decoration: none;
-      margin-left: 20px;
-      font-size: 15px;
+      font-size: 0.96rem;
+      opacity: 0.92;
+      transition: 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--yellow);
     }
 
     .hero {
-      text-align: center;
-      padding: 90px 20px 70px;
+      padding: 78px 0 48px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.85fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-left,
+    .hero-right,
+    .glass-card,
+    .track-card,
+    .timeline-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+    }
+
+    .hero-left {
+      padding: 42px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -60px;
+      top: -60px;
+      background: radial-gradient(circle, rgba(255, 214, 10, 0.35), transparent 70%);
+      border-radius: 50%;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      color: var(--yellow);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
     }
 
     .hero h1 {
-      font-size: 56px;
-      margin-bottom: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.3rem, 6vw, 4.4rem);
+      line-height: 1.03;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+
+    .hero h1 .gradient {
+      background: linear-gradient(90deg, var(--yellow), var(--orange), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .hero p {
-      font-size: 18px;
-      max-width: 700px;
-      margin: 0 auto 24px;
-      line-height: 1.6;
+      font-size: 1.02rem;
+      color: var(--muted);
+      max-width: 650px;
+      line-height: 1.75;
+      margin-bottom: 26px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 26px;
     }
 
     .btn {
-      display: inline-block;
-      background: black;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 10px;
       text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
+      padding: 13px 22px;
+      border-radius: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s ease;
+      border: 1px solid transparent;
     }
 
-    .btn:hover {
-      transform: scale(1.06);
-      background: yellow;
-      color: black;
+    .btn-primary {
+      background: linear-gradient(90deg, var(--yellow), var(--orange));
+      color: #111;
+      box-shadow: 0 12px 30px rgba(255, 123, 0, 0.28);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .btn-secondary {
+      color: white;
+      border-color: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: translateY(-3px);
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .mini-stat {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .mini-stat h3 {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+      color: var(--yellow);
+    }
+
+    .mini-stat p {
+      margin: 0;
+      font-size: 0.87rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .hero-right {
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-right::before {
+      content: "";
+      position: absolute;
+      inset: auto -50px -60px auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(0, 212, 255, 0.3), transparent 70%);
+      border-radius: 50%;
+    }
+
+    .panel-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      color: var(--cyan);
+      letter-spacing: 0.8px;
+    }
+
+    .route {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .route-step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .route-num {
+      min-width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      color: #111;
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+    }
+
+    .route-step h4 {
+      font-size: 0.98rem;
+      margin-bottom: 4px;
+    }
+
+    .route-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.87rem;
+      line-height: 1.45;
     }
 
     .section {
-      padding: 50px 20px;
-      max-width: 1100px;
-      margin: auto;
+      padding: 26px 0 12px;
     }
 
-    .section h2 {
-      text-align: center;
-      margin-bottom: 28px;
-      font-size: 32px;
+    .section-heading {
+      margin-bottom: 22px;
     }
 
-    .about-box,
-    .timeline-box {
-      background: rgba(0, 0, 0, 0.25);
-      padding: 24px;
-      border-radius: 18px;
+    .section-heading .eyebrow {
+      color: var(--cyan);
+      font-size: 0.88rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .section-heading h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      margin-bottom: 10px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      max-width: 720px;
       line-height: 1.7;
-      text-align: center;
     }
 
-    .tracks {
+    .glass-card {
+      padding: 28px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+    }
+
+    .highlight-box {
+      padding: 22px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(255,214,10,0.12), rgba(0,212,255,0.08));
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .highlight-box h3 {
+      margin-bottom: 10px;
+      color: var(--yellow);
+    }
+
+    .highlight-box p,
+    .glass-card p {
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .tracks-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
     }
 
-    .card {
-      background: rgba(0, 0, 0, 0.25);
-      padding: 24px;
-      border-radius: 18px;
-      text-align: center;
-      transition: 0.3s;
+    .track-card {
+      padding: 26px;
+      transition: 0.32s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .card:hover {
+    .track-card::after {
+      content: "";
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      right: -45px;
+      bottom: -45px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
+    }
+
+    .track-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255, 214, 10, 0.28);
+    }
+
+    .icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 1.35rem;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .track-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .track-card p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .timeline-wrap {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .timeline-card {
+      padding: 24px 20px;
+      text-align: left;
+      transition: 0.3s ease;
+    }
+
+    .timeline-card:hover {
       transform: translateY(-6px);
     }
 
-    .card h3 {
-      margin-bottom: 10px;
-      font-size: 22px;
+    .timeline-card .time-tag {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--yellow);
+      font-size: 0.82rem;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .timeline-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .timeline-card p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    .cta {
+      padding: 26px 0 48px;
+    }
+
+    .cta-card {
+      padding: 34px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(255,123,0,0.18), rgba(123,44,255,0.16), rgba(0,212,255,0.13));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .cta-card h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      margin-bottom: 12px;
+    }
+
+    .cta-card p {
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 auto 22px;
+      line-height: 1.75;
     }
 
     footer {
-      text-align: center;
-      padding: 22px;
-      background: rgba(0, 0, 0, 0.25);
-      margin-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(8, 10, 20, 0.55);
+      backdrop-filter: blur(10px);
     }
 
-    @media (max-width: 768px) {
-      .navbar {
-        flex-direction: column;
-        gap: 10px;
-      }
+    .footer-inner {
+      padding: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
 
-      .nav-links a {
-        margin: 0 8px;
-      }
+    .footer-inner strong {
+      color: white;
+    }
 
-      .hero h1 {
-        font-size: 40px;
-      }
-
-      .tracks {
+    @media (max-width: 980px) {
+      .hero-grid,
+      .about-grid,
+      .tracks-grid,
+      .timeline-wrap {
         grid-template-columns: 1fr;
+      }
+
+      .mini-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-left,
+      .hero-right {
+        padding: 28px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .nav-inner {
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+      }
+
+      .hero {
+        padding-top: 42px;
+      }
+
+      .hero-left,
+      .hero-right,
+      .glass-card,
+      .track-card,
+      .timeline-card,
+      .cta-card {
+        border-radius: 22px;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
       }
     }
   </style>
@@ -148,56 +581,219 @@
 <body>
 
   <nav class="navbar">
-    <div class="logo">🚀 HackArena</div>
-    <div class="nav-links">
-      <a href="#about">About</a>
-      <a href="#tracks">Tracks</a>
-      <a href="#timeline">Timeline</a>
+    <div class="container nav-inner">
+      <div class="logo">🚀 <span>HackArena</span></div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#tracks">Tracks</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#register">Register</a>
+      </div>
     </div>
   </nav>
 
-  <section class="hero">
-    <h1>HackArena</h1>
-    <p>Ignite Room presents a Subway Surfers inspired hackathon experience with speed, creativity and bold ideas.</p>
-    <a href="#" class="btn">Register Now</a>
-  </section>
+  <header class="hero">
+    <div class="container hero-grid">
+      <div class="hero-left">
+        <div class="tag">🎮 Subway Surfers Inspired Hackathon</div>
+        <h1>Run with ideas. <span class="gradient">Build at HackArena.</span></h1>
+        <p>
+          Ignite Room presents HackArena — a fast, vibrant and creator-first hackathon
+          experience inspired by the energy of Subway Surfers. Think bold ideas, sharp builds
+          and a high-speed innovation journey.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#register" class="btn btn-primary">Register Now</a>
+          <a href="#about" class="btn btn-secondary">Explore Event</a>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <h3>24H+</h3>
+            <p>Of building, ideation and momentum</p>
+          </div>
+          <div class="mini-stat">
+            <h3>3</h3>
+            <p>Focused tracks for innovation and creativity</p>
+          </div>
+          <div class="mini-stat">
+            <h3>1</h3>
+            <p>High-energy arena to ship bold solutions</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div>
+          <div class="panel-title">Hack Route</div>
+          <div class="route">
+            <div class="route-step">
+              <div class="route-num">1</div>
+              <div>
+                <h4>Register</h4>
+                <p>Enter the arena and lock your participation.</p>
+              </div>
+            </div>
+            <div class="route-step">
+              <div class="route-num">2</div>
+              <div>
+                <h4>Build Fast</h4>
+                <p>Turn your idea into a live solution with speed.</p>
+              </div>
+            </div>
+            <div class="route-step">
+              <div class="route-num">3</div>
+              <div>
+                <h4>Pitch Bold</h4>
+                <p>Present your product and stand out with impact.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 18px;">
+          <h3>Why this theme works</h3>
+          <p>
+            Instead of copying the game, this design captures the same fast-paced,
+            colorful and energetic vibe in a cleaner hackathon format.
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
 
   <section class="section" id="about">
-    <h2>About</h2>
-    <div class="about-box">
-      HackArena is a high-energy hackathon by Ignite Room where innovation meets action.
-      Inspired by the fun and vibrant vibe of Subway Surfers, this event encourages builders
-      to think fast, create fearlessly and bring ideas to life.
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">About the Event</span>
+        <h2>Where speed meets innovation</h2>
+        <p>
+          HackArena is a high-energy hackathon by Ignite Room designed for makers,
+          thinkers and builders who love turning ideas into working products.
+          The experience is inspired by the motion, bold visuals and momentum of Subway Surfers.
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <div class="glass-card">
+          <p>
+            This is not just about coding fast — it is about building smart, collaborating well
+            and presenting solutions that feel exciting and relevant. The website uses a playful,
+            neon-inspired UI to create an engaging event identity while still keeping the layout
+            minimal, readable and senior-friendly.
+          </p>
+        </div>
+
+        <div class="highlight-box">
+          <h3>Event Feel</h3>
+          <p>
+            Fast-paced. Creative. Vibrant. Competitive. The whole landing page is designed to
+            communicate momentum, motion and modern hackathon culture.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="section" id="tracks">
-    <h2>Tracks</h2>
-    <div class="tracks">
-      <div class="card">
-        <h3>AI / ML</h3>
-        <p>Build smart and impactful solutions using artificial intelligence.</p>
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">Tracks</span>
+        <h2>Choose your lane</h2>
+        <p>
+          Participants can build across focused problem spaces while still bringing originality
+          and strong execution to the table.
+        </p>
       </div>
-      <div class="card">
-        <h3>Web Dev</h3>
-        <p>Create modern and user-friendly digital experiences for real problems.</p>
-      </div>
-      <div class="card">
-        <h3>Open Innovation</h3>
-        <p>Bring unique ideas across any domain and solve creatively.</p>
+
+      <div class="tracks-grid">
+        <div class="track-card">
+          <div class="icon">🤖</div>
+          <h3>AI / ML</h3>
+          <p>
+            Build intelligent systems, automate workflows and create impactful products using data,
+            models and applied machine intelligence.
+          </p>
+        </div>
+
+        <div class="track-card">
+          <div class="icon">💻</div>
+          <h3>Web Development</h3>
+          <p>
+            Design and develop digital experiences that are modern, scalable and user-focused,
+            from landing pages to full product concepts.
+          </p>
+        </div>
+
+        <div class="track-card">
+          <div class="icon">⚡</div>
+          <h3>Open Innovation</h3>
+          <p>
+            Bring bold ideas from any domain, experiment freely and solve real problems with
+            fresh thinking and strong product direction.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="section" id="timeline">
-    <h2>Timeline</h2>
-    <div class="timeline-box">
-      Registration Opens → Idea Submission → Hacking Begins → Final Demo Day
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">Timeline</span>
+        <h2>The sprint to the finish</h2>
+        <p>
+          A simple event flow that keeps the energy high and the process clear.
+        </p>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="timeline-card">
+          <span class="time-tag">Stage 01</span>
+          <h3>Registrations Open</h3>
+          <p>Participants sign up, explore the event and prepare for the challenge.</p>
+        </div>
+
+        <div class="timeline-card">
+          <span class="time-tag">Stage 02</span>
+          <h3>Idea Submission</h3>
+          <p>Teams finalize direction and submit their concept to enter the build phase.</p>
+        </div>
+
+        <div class="timeline-card">
+          <span class="time-tag">Stage 03</span>
+          <h3>Hacking Begins</h3>
+          <p>Builders move fast, prototype rapidly and convert ideas into working solutions.</p>
+        </div>
+
+        <div class="timeline-card">
+          <span class="time-tag">Stage 04</span>
+          <h3>Final Demo Day</h3>
+          <p>Teams pitch their output, showcase impact and compete for recognition.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="register">
+    <div class="container">
+      <div class="cta-card">
+        <h2>Ready to enter the arena?</h2>
+        <p>
+          Join HackArena by Ignite Room and build something bold, fast and unforgettable.
+          Replace this button with the final registration form link whenever the backend is ready.
+        </p>
+        <a href="#" class="btn btn-primary">Register for HackArena</a>
+      </div>
     </div>
   </section>
 
   <footer>
-    © 2026 HackArena by Ignite Room
+    <div class="container footer-inner">
+      <p>© 2026 <strong>HackArena</strong> by Ignite Room</p>
+      <p>Minimal frontend concept with a Subway Surfers-inspired theme</p>
+    </div>
   </footer>
 
 </body>
